@@ -1,0 +1,572 @@
+/* ─── Transformers Movie Style Design Tokens ────────────────────── */
+:root {
+  --bg-deep: #04060c;
+  --bg-panel: rgba(8, 13, 24, 0.78);
+  --accent-cyan: #00e5ff;
+  --accent-amber: #ffab2e;
+  --accent-red: #ff3333;
+  --accent-emerald: #18f29a;
+  --text-primary: #eef4ff;
+  --text-muted: #7c8ea8;
+  --border-subtle: rgba(0, 229, 255, 0.22);
+  color-scheme: dark;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body,
+#root {
+  width: 100%;
+  min-height: 100vh;
+  background: var(--bg-deep);
+  color: var(--text-primary);
+  font-family: 'Rajdhani', 'Inter', system-ui, -apple-system, sans-serif;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+canvas {
+  display: block;
+  touch-action: none;
+}
+
+/* ─── Layout ───────────────────────────────────────────────────── */
+.login-page {
+  position: relative;
+  min-height: 100vh;
+  width: 100%;
+  overflow: hidden;
+  background: radial-gradient(circle at 30% 40%, #0b1528 0%, #04060c 70%);
+}
+
+.login-canvas-wrap {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+.login-topbar {
+  position: relative;
+  z-index: 20;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1.15rem 2rem;
+  border-bottom: 1px solid rgba(0, 229, 255, 0.12);
+  background: linear-gradient(180deg, rgba(4, 8, 16, 0.85) 0%, transparent 100%);
+}
+
+.login-topbar__status,
+.login-topbar__controls {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.login-topbar__dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--accent-cyan);
+  box-shadow: 0 0 14px var(--accent-cyan);
+  animation: pulse 2s ease-in-out infinite;
+}
+
+.login-topbar__dot--amber {
+  background: var(--accent-amber);
+  box-shadow: 0 0 14px var(--accent-amber);
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.35; }
+}
+
+.login-topbar__label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.login-topbar__badge {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  padding: 0.25rem 0.6rem;
+  border-radius: 4px;
+  border: 1px solid rgba(0, 229, 255, 0.3);
+  background: rgba(0, 229, 255, 0.08);
+  color: var(--accent-cyan);
+}
+
+.hud-cam-group {
+  display: flex;
+  gap: 0.35rem;
+}
+
+.hud-pill-btn {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  padding: 0.32rem 0.65rem;
+  border-radius: 4px;
+  border: 1px solid rgba(124, 142, 168, 0.28);
+  background: rgba(8, 13, 24, 0.7);
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.hud-pill-btn:hover,
+.hud-pill-btn--active {
+  border-color: var(--accent-cyan);
+  color: var(--accent-cyan);
+  background: rgba(0, 229, 255, 0.12);
+  box-shadow: 0 0 12px rgba(0, 229, 255, 0.2);
+}
+
+.login-body {
+  position: relative;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  min-height: 100vh;
+  padding: 1.5rem 2rem 2.5rem;
+  pointer-events: none;
+}
+
+@media (min-width: 1024px) {
+  .login-body {
+    padding: 1.5rem 5rem 2.5rem;
+  }
+}
+
+/* ─── Left HUD Telemetry Deck ──────────────────────────────────── */
+.hud-left-telemetry {
+  pointer-events: auto;
+  align-self: flex-end;
+  display: none;
+}
+
+@media (min-width: 900px) {
+  .hud-left-telemetry {
+    display: block;
+  }
+}
+
+.hud-spec-card {
+  border: 1px solid rgba(0, 229, 255, 0.22);
+  background: rgba(6, 10, 20, 0.72);
+  backdrop-filter: blur(16px);
+  padding: 0.9rem 1.1rem;
+  border-radius: 10px;
+  min-width: 310px;
+}
+
+.hud-spec-card__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.65rem;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.15em;
+}
+
+.hud-spec-card__code {
+  color: var(--text-muted);
+}
+
+.hud-spec-card__optic.is-open {
+  color: var(--accent-cyan);
+}
+
+.hud-spec-card__optic.is-shielded {
+  color: var(--accent-amber);
+}
+
+.hud-spec-card__Actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+}
+
+.hud-action-chip {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  padding: 0.42rem 0.68rem;
+  border-radius: 5px;
+  border: 1px solid rgba(0, 229, 255, 0.25);
+  background: rgba(0, 229, 255, 0.06);
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: all 0.18s;
+}
+
+.hud-action-chip:hover,
+.hud-action-chip.is-active {
+  border-color: var(--accent-amber);
+  background: rgba(255, 171, 46, 0.16);
+  color: var(--accent-amber);
+}
+
+/* ─── Login Panel ──────────────────────────────────────────────── */
+.login-panel {
+  pointer-events: auto;
+  width: 100%;
+  max-width: 450px;
+  margin-left: auto;
+}
+
+.login-card {
+  position: relative;
+  border-radius: 14px;
+  border: 1px solid var(--border-subtle);
+  background: var(--bg-panel);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  padding: 2.1rem;
+  box-shadow:
+    0 24px 70px rgba(0, 0, 0, 0.72),
+    0 0 35px rgba(0, 229, 255, 0.07),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+
+.login-card__corner {
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  border-color: var(--accent-cyan);
+  pointer-events: none;
+}
+
+.login-card__corner--tl {
+  top: -1px; left: -1px;
+  border-top: 2px solid var(--accent-cyan);
+  border-left: 2px solid var(--accent-cyan);
+  border-top-left-radius: 14px;
+}
+
+.login-card__corner--tr {
+  top: -1px; right: -1px;
+  border-top: 2px solid var(--accent-cyan);
+  border-right: 2px solid var(--accent-cyan);
+  border-top-right-radius: 14px;
+}
+
+.login-card__corner--bl {
+  bottom: -1px; left: -1px;
+  border-bottom: 2px solid var(--accent-red);
+  border-left: 2px solid var(--accent-red);
+  border-bottom-left-radius: 14px;
+}
+
+.login-card__corner--br {
+  bottom: -1px; right: -1px;
+  border-bottom: 2px solid var(--accent-red);
+  border-right: 2px solid var(--accent-red);
+  border-bottom-right-radius: 14px;
+}
+
+.login-card__insignia-row {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+}
+
+.autobot-crest {
+  width: 44px;
+  height: 44px;
+  flex-shrink: 0;
+  filter: drop-shadow(0 0 10px rgba(0, 229, 255, 0.35));
+}
+
+.login-card__eyebrow {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9.5px;
+  font-weight: 700;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--accent-amber);
+}
+
+.login-card__title {
+  margin-top: 0.25rem;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 2rem;
+  font-weight: 900;
+  letter-spacing: 0.04em;
+  line-height: 1.05;
+  color: #ffffff;
+  text-shadow: 0 0 24px rgba(0, 229, 255, 0.25);
+}
+
+.login-card__title span {
+  color: var(--accent-cyan);
+}
+
+.login-card__divider {
+  margin-top: 1.1rem;
+  height: 2px;
+  width: 100%;
+  background: linear-gradient(90deg, var(--accent-red) 0%, var(--accent-cyan) 50%, transparent 100%);
+}
+
+.login-form {
+  margin-top: 1.65rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.login-field {
+  display: flex;
+  flex-direction: column;
+}
+
+.login-field__label-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.45rem;
+}
+
+.login-field__label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.optic-pill {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  padding: 0.15rem 0.5rem;
+  border-radius: 4px;
+}
+
+.optic-pill--open {
+  background: rgba(0, 229, 255, 0.12);
+  color: var(--accent-cyan);
+  border: 1px solid rgba(0, 229, 255, 0.3);
+}
+
+.optic-pill--covered {
+  background: rgba(255, 171, 46, 0.15);
+  color: var(--accent-amber);
+  border: 1px solid rgba(255, 171, 46, 0.4);
+}
+
+.login-field__input {
+  width: 100%;
+  border-radius: 8px;
+  border: 1px solid rgba(124, 142, 168, 0.28);
+  background: rgba(3, 6, 14, 0.72);
+  padding: 0.82rem 1rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #fff;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  font-family: inherit;
+}
+
+.login-field__input:focus {
+  border-color: var(--accent-cyan);
+  box-shadow: 0 0 0 3px rgba(0, 229, 255, 0.15);
+}
+
+.login-field__wrap {
+  position: relative;
+}
+
+.login-field__input--password {
+  padding-right: 3.2rem;
+}
+
+.login-field__toggle {
+  position: absolute;
+  right: 0.55rem;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 34px;
+  height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 229, 255, 0.08);
+  border: 1px solid rgba(0, 229, 255, 0.25);
+  color: var(--accent-cyan);
+  cursor: pointer;
+  transition: all 0.2s;
+  border-radius: 6px;
+}
+
+.login-field__toggle:hover {
+  background: rgba(0, 229, 255, 0.2);
+  box-shadow: 0 0 12px rgba(0, 229, 255, 0.35);
+}
+
+.login-field__toggle--covered {
+  background: rgba(255, 171, 46, 0.18);
+  border-color: var(--accent-amber);
+  color: var(--accent-amber);
+  box-shadow: 0 0 14px rgba(255, 171, 46, 0.3);
+}
+
+.login-field__hint {
+  margin-top: 0.4rem;
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.login-error {
+  border-radius: 8px;
+  border: 1px solid rgba(255, 51, 51, 0.5);
+  background: rgba(255, 51, 51, 0.12);
+  padding: 0.75rem 1rem;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  font-weight: 600;
+  color: #ff6b6b;
+}
+
+.login-submit {
+  width: 100%;
+  padding: 0.95rem;
+  border-radius: 8px;
+  border: 1px solid rgba(0, 229, 255, 0.5);
+  background: linear-gradient(135deg, #00c6ff 0%, #0072ff 100%);
+  color: #ffffff;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 11.5px;
+  font-weight: 800;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 8px 24px rgba(0, 140, 255, 0.35);
+}
+
+.login-submit:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 12px 30px rgba(0, 229, 255, 0.5);
+  filter: brightness(1.1);
+}
+
+.login-success-box {
+  border-radius: 8px;
+  border: 1px solid rgba(24, 242, 154, 0.45);
+  background: rgba(24, 242, 154, 0.1);
+  padding: 0.9rem;
+  text-align: center;
+}
+
+.login-success-box__title {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  color: var(--accent-emerald);
+  margin-bottom: 0.6rem;
+}
+
+.login-reset-btn {
+  padding: 0.45rem 1rem;
+  border-radius: 5px;
+  border: 1px solid var(--accent-emerald);
+  background: transparent;
+  color: var(--accent-emerald);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  cursor: pointer;
+}
+
+.login-links {
+  margin-top: 1.4rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.login-links a {
+  color: inherit;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.login-links a:hover {
+  color: var(--accent-cyan);
+}
+
+.login-readout {
+  margin-top: 0.85rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9.5px;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(124, 142, 168, 0.75);
+}
+
+.login-readout__status {
+  color: var(--accent-emerald);
+}
+
+/* ─── Overlays ─────────────────────────────────────────────────── */
+.scanlines {
+  pointer-events: none;
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  background: repeating-linear-gradient(
+    0deg,
+    rgba(0, 229, 255, 0.018) 0px,
+    rgba(0, 229, 255, 0.018) 1px,
+    transparent 1px,
+    transparent 3px
+  );
+  mix-blend-mode: screen;
+}
+
+.vignette {
+  pointer-events: none;
+  position: fixed;
+  inset: 0;
+  z-index: 39;
+  background: radial-gradient(
+    ellipse at center,
+    transparent 45%,
+    rgba(0, 0, 0, 0.62) 100%
+  );
+}
